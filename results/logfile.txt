@@ -1,2 +1,0 @@
-﻿In file 14844.csv string (test:новый год)|10000716|no|common||elasticsearch|--query="новый год"|presets/bucket_216|preset=10000716|() [ERROR] {elasticSearch}: failed to connect to elastic search
-17137

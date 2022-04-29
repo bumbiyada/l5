@@ -96,6 +96,13 @@ func MakePullRequest() {
 
 func SearchReplace() {
 	// open all files
+	diffFile, err := os.Create(`diffile.txt`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer diffFile.Close()
+	diffFile.WriteString(fmt.Sprintf("fileName >>> String Before change >>> String After change\n"))
 	startTime := time.Now()
 	fileNames := strings.Split(`ru\search-ab.csv, ru\search.csv, common\search\beauty\search.csv, common\search\books\search.csv, common\search\books\search-other.csv, common\search\brands\search.csv, common\search\dresses\bucket-25-dress-search.csv, common\search\dresses\bucket-25-sundress-search.csv, common\search\dresses\bucket-68-dress-search.csv, common\search\dresses\bucket-68-sundress-search.csv, common\search\dresses\dresses-shard-search.csv, common\search\dresses\search-other.csv, common\search\electronics\search.csv, common\search\electronics\search-other.csv, common\search\hats\search.csv, common\search\hats\search-other.csv, common\search\household-goods\search.csv, common\search\household-goods\search-other.csv, common\search\jewelry\search.csv, common\search\jewelry\search-other.csv, common\search\t-shirts\search.csv, common\search\t-shirts\search-other.csv, common\search\underwear\search.csv, common\indices\presets.csv, common\indices\books.csv`, ", ")
 	fileArray := [][]string{}
@@ -131,6 +138,7 @@ func SearchReplace() {
 
 					if line == ReplaceBody.lineBefore {
 						fileArray[i][j] = ReplaceBody.lineAfter
+						diffFile.WriteString(fmt.Sprintf("%s >>> %s >>> %s\n", fileNames[i], ReplaceBody.lineBefore, ReplaceBody.lineAfter))
 						//log.Println("\t[REPLACE] line:", ReplaceBody.lineAfter)
 						SuccessArray[i].SuccessCnt++
 						ToReplaceResp <- nil
@@ -152,7 +160,7 @@ func SearchReplace() {
 				output := strings.Join(lines, "\n")
 				err := ioutil.WriteFile(filePath, []byte(output), 0644)
 				if err != nil {
-					log.Fatalln(err)
+					log.Println(err)
 				}
 				log.Printf("[SAVE] Filename = %s", filePath)
 			}
